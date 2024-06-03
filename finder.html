@@ -157,6 +157,22 @@
             }
             countsDiv.appendChild(countsList);
         });
+        
+        function formatDate(date) {
+    // Get day, month, and year from the date object
+    const day = date.getDate().toString().padStart(2, '0'); // Pad single digits with leading zero
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so add 1
+    const year = date.getFullYear();
+
+    // Combine day, month, and year with hyphens to form the desired format
+    return `${day}-${month}-${year}`;
+}
+
+// Example usage
+const currentDate = new Date();
+const formattedDate = formatDate(currentDate);
+console.log(formattedDate); // Output will be something like "03-06-2024" (for June 3, 2024)
+
     </script>
 </body>
 </html>
