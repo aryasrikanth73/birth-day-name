@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Name Finder</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #274B74, #8233C5, #E963FD);
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .search-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 25px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-btn {
+            width: 100%;
+            background: #274B74;
+            color: #fff;
+            padding: 10px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        #loader {
+            color: #274B74;
+            font-size: 24px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Day Name Finder</h1>
+        <form id="dayNameForm">
+            <div class="form-group">
+                <input type="date" id="dob" class="form-control search-input" placeholder="DOB" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="years" class="form-control search-input" placeholder="Enter number of years" required min="1">
+            </div>
+            <button type="submit" class="btn search-btn">Submit</button>
+        </form>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-3 order-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="counts" id="counts"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-9 order-md-1">
+                <div class="row" id="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('dayNameForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const dob = new Date(document.getElementById('dob').value);
+            const years = parseInt(document.getElementById('years').value);
+            const resultsDiv = document.getElementById('results');
+            const countsDiv = document.getElementById('counts');
+            resultsDiv.innerHTML = ''; // Clear previous results
+            countsDiv.innerHTML = ''; // Clear previous counts
+
+            const dayCounts = {
+                Sunday: 0,
+                Monday: 0,
+                Tuesday: 0,
+                Wednesday: 0,
+                Thursday: 0,
+                Friday: 0,
+                Saturday: 0
+            };
+
+            const results = [];
+
+            for (let i = 0; i < years; i++) {
+                const currentYear = dob.getFullYear() + i;
+                const currentDate = new Date(dob);
+                currentDate.setFullYear(currentYear);
+                const dayName = currentDate.toLocaleString('default', { weekday: 'long' });
+                dayCounts[dayName]++;
+                results.push(`${currentDate.toLocaleDateString()}: ${dayName}`);
+            }
+
+            results.forEach((result, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('col-12', 'col-md-4');
+                resultItem.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">${result}</div>
+                    </div>`;
+                resultsDiv.appendChild(resultItem);
+            });
+
+            const countsList = document.createElement('ul');
+            countsList.classList.add('list-group');
+            for (const [day, count] of Object.entries(dayCounts)) {
+                const countItem = document.createElement('li');
+                countItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                countItem.innerHTML = `
+                    ${day}
+                    <span class="badge badge-primary badge-pill">${count}</span>`;
+                countsList.appendChild(countItem);
+            }
+            countsDiv.appendChild(countsList);
+        });
+    </script>
+</body>
+</html>
