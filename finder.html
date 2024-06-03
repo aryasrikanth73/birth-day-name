@@ -48,8 +48,13 @@
             margin-bottom: 20px;
         }
 
+        .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5); /* Adjust the color to make it visible */
+        }
+
         .search-btn {
             width: 100%;
+            margin: 0; /* Remove default margin */
             background: #274B74;
             color: #fff;
             padding: 10px;
@@ -73,7 +78,7 @@
 </head>
 <body>
     <div class="search-container">
-        <h1>Day Name Finder</h1>
+        <h1>Birthday Name Finder</h1>
         <form id="dayNameForm">
             <div class="form-group">
                 <input type="date" id="dob" class="form-control search-input" placeholder="DOB" required>
